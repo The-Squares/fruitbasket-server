@@ -1,7 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
 require("dotenv").config();
-const { User, Offer, Review } = require("./Models/models");
 const app = express();
 const port = process.env.PORT || 8080;
 
@@ -18,77 +17,26 @@ mongoose.connect(
   }
 );
 
-// Client side validation (fix later)
-app.post("/api/users", async (req, res) => {
-  let id = new mongoose.mongo.ObjectId();
+const UserController = require("Controllers/UserController");
+const OfferController = require("Controllers/OfferController");
+const ReviewController = require("Controllers/ReviewController");
 
-  let userParams = { ...req.body, _id: id };
+app.get("/api/users", UserController.all);
+app.get("/api/users/:userid", UserController.get);
+app.get("/api/users/:userid/offers", UserController.getOffers);
+app.get("/api/users/:userid/reviews", UserController.getReviews);
+app.get("/api/users/:userid/all", UserController.getAllData);
+app.post("/api/users", UserController.create);
 
-  await User.create(userParams);
-  res.json(userParams);
-});
+app.get("/api/offers", OfferController.all);
+app.get("/api/offers/:offerid", OfferController.get);
+app.get("/api/offers/:offerid/all", OfferController.getAllData);
+app.post("/api/offers", OfferController.create);
 
-app.post("/api/offers", async (req, res) => {
-  let id = new mongoose.mongo.ObjectId();
-
-  let offerParams = { ...req.body, _id: id };
-  await Offer.create(offerParams);
-
-  const user = await User.findById({
-    _id: req.body.user,
-  });
-  user.offers.push(id);
-  user.save();
-
-  res.json(offerParams);
-});
-
-app.post("/api/reviews", async (req, res) => {
-  let id = new mongoose.mongo.ObjectId();
-
-  let reviewParams = { ...req.body, _id: id };
-  await Review.create(reviewParams);
-
-  const user = await User.findById({
-    _id: req.body.user,
-  });
-  user.reviews.push(id);
-  user.save();
-
-  const offer = await Offer.findById({
-    _id: req.body.offer,
-  });
-  offer.reviews.push(id);
-  offer.save();
-
-  res.json(reviewParams);
-});
-
-app.get("/api/users/:userid", async (req, res) => {
-  let foundUser = await User.findById({ _id: req.params.userid })
-    .populate("offers")
-    .populate("reviews");
-
-  res.json(foundUser);
-});
-
-app.get("/api/offers/:offerid", async (req, res) => {
-  let foundOffer = await Offer.findById({
-    _id: req.params.offerid,
-  }).populate("user");
-
-  res.json(foundOffer);
-});
-
-app.get("/api/reviews/:reviewid", async (req, res) => {
-  let foundReview = await Review.findById({
-    _id: req.params.reviewid,
-  })
-    .populate("user")
-    .populate("offer");
-
-  res.json(foundReview);
-});
+app.get("/api/reviews", ReviewController.all);
+app.get("/api/reviews/:reviewid", ReviewController.get);
+app.get("/api/reviews/:reviewid/all", ReviewController.getAllData);
+app.post("/api/reviews", ReviewController.create);
 
 app.listen(port, () => {
   console.log(`Started on http://localhost:${port}`);
