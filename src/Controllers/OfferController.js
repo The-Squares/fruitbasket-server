@@ -2,17 +2,13 @@ const mongoose = require("mongoose");
 const { Offer } = require("./Models/models");
 
 module.exports.get = async () => {
-  let foundOffer = await Offer.findById({
-    _id: req.params.offerid,
-  });
+  let foundOffer = await Offer.findById(req.params.offerid);
 
   res.json(foundOffer);
 };
 
 module.exports.getAllData = async () => {
-  let foundOffer = await Offer.findById({
-    _id: req.params.offerid,
-  }).populate("user");
+  let foundOffer = await Offer.findById(req.params.offerid).populate("user");
 
   res.json(foundOffer);
 };
@@ -35,4 +31,11 @@ module.exports.create = async () => {
   user.save();
 
   res.json(offerParams);
+};
+
+module.exports.update = async (req, res) => {
+  let doc = await Offer.findByIdAndUpdate(req.params.offerid, req.body, {
+    new: true,
+  });
+  res.json(doc);
 };

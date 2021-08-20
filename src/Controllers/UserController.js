@@ -2,29 +2,25 @@ const mongoose = require("mongoose");
 const { User } = require("./Models/models");
 
 module.exports.get = async (req, res) => {
-  let foundUser = await User.findById({ _id: req.params.userid });
+  let foundUser = await User.findById(req.params.userid);
 
   res.json(foundUser);
 };
 
 module.exports.getOffers = async (req, res) => {
-  let foundUser = await User.findById({ _id: req.params.userid }).populate(
-    "offers"
-  );
+  let foundUser = await User.findById(req.params.userid).populate("offers");
 
   res.json(foundUser);
 };
 
 module.exports.getReviews = async (req, res) => {
-  let foundUser = await User.findById({ _id: req.params.userid }).populate(
-    "offers"
-  );
+  let foundUser = await User.findById(req.params.userid).populate("offers");
 
   res.json(foundUser);
 };
 
 module.exports.getAllData = async (req, res) => {
-  let foundUser = await User.findById({ _id: req.params.userid })
+  let foundUser = await User.findById(req.params.userid)
     .populate("offers")
     .populate("reviews");
 
@@ -44,4 +40,11 @@ module.exports.create = async (req, res) => {
 
   await User.create(userParams);
   res.json(userParams);
+};
+
+module.exports.update = async (req, res) => {
+  let doc = await User.findByIdAndUpdate(req.params.userid, req.body, {
+    new: true,
+  });
+  res.json(doc);
 };

@@ -2,17 +2,13 @@ const mongoose = require("mongoose");
 const { Review } = require("./Models/models");
 
 module.exports.get = async (req, res) => {
-  let foundReview = await Review.findById({
-    _id: req.params.reviewid,
-  });
+  let foundReview = await Review.findById(req.params.reviewid);
 
   res.json(foundReview);
 };
 
 module.exports.getAllData = async (req, res) => {
-  let foundReview = await Review.findById({
-    _id: req.params.reviewid,
-  })
+  let foundReview = await Review.findById(req.params.reviewid)
     .populate("user")
     .populate("offer");
 
@@ -43,4 +39,11 @@ module.exports.create = async (req, res) => {
   offer.save();
 
   res.json(reviewParams);
+};
+
+module.exports.update = async (req, res) => {
+  let doc = await Review.findByIdAndUpdate(req.params.reviewid, req.body, {
+    new: true,
+  });
+  res.json(doc);
 };
