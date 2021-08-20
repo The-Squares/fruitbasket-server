@@ -1,13 +1,13 @@
 const mongoose = require("mongoose");
 const { Offer } = require("../Models/models");
 
-module.exports.get = async () => {
+module.exports.get = async (req, res) => {
   let foundOffer = await Offer.findById(req.params.offerid);
 
   res.json(foundOffer);
 };
 
-module.exports.getAllData = async () => {
+module.exports.getAllData = async (req, res) => {
   let foundOffer = await Offer.findById(req.params.offerid).populate("user");
 
   res.json(foundOffer);
@@ -18,7 +18,7 @@ module.exports.all = async (req, res) => {
   res.json(offers);
 };
 
-module.exports.create = async () => {
+module.exports.create = async (req, res) => {
   let id = new mongoose.mongo.ObjectId();
 
   let offerParams = { ...req.body, _id: id };
