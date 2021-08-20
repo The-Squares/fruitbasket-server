@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { User } = require("./Models/models");
+const { User } = require("../Models/models");
 
 module.exports.get = async (req, res) => {
   let foundUser = await User.findById(req.params.userid);
@@ -32,7 +32,6 @@ module.exports.all = async (req, res) => {
   res.json(users);
 };
 
-// Client side validation (fix later)
 module.exports.create = async (req, res) => {
   let id = new mongoose.mongo.ObjectId();
 

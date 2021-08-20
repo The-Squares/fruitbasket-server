@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { Offer } = require("./Models/models");
+const { Offer } = require("../Models/models");
 
 module.exports.get = async () => {
   let foundOffer = await Offer.findById(req.params.offerid);

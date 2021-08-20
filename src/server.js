@@ -17,9 +17,9 @@ mongoose.connect(
   }
 );
 
-const UserController = require("Controllers/UserController");
-const OfferController = require("Controllers/OfferController");
-const ReviewController = require("Controllers/ReviewController");
+const UserController = require("./Controllers/UserController");
+const OfferController = require("./Controllers/OfferController");
+const ReviewController = require("./Controllers/ReviewController");
 
 app.get("/api/users", UserController.all);
 app.get("/api/users/:userid", UserController.get);
