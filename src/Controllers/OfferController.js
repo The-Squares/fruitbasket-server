@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const cloudinary = require("../Util/cloudinary");
 const { Offer, User } = require("../Models/models");
 
 module.exports.get = async (req, res) => {
@@ -31,6 +32,23 @@ module.exports.create = async (req, res) => {
   user.save();
 
   res.json(offerParams);
+};
+
+module.exports.image = async (req, res) => {
+  try {
+    const image = await cloudinary.uploader.upload(req.file.path, {
+      public_id: req.params.offerid,
+    });
+
+    const data = { picture_url: image.secure_url };
+    let doc = await User.findByIdAndUpdate(req.params.offerid, data, {
+      new: true,
+    });
+    res.json(doc);
+  } catch (e) {
+    console.log(e);
+    res.code(500).send("Failed");
+  }
 };
 
 module.exports.update = async (req, res) => {
