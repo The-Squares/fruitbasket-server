@@ -9,7 +9,7 @@ module.exports.get = async (req, res) => {
 };
 
 module.exports.getAllData = async (req, res) => {
-  let foundOffer = await Offer.findById(req.params.offerid).populate("user");
+  let foundOffer = await Offer.findById(req.params.offerid).populate("user").populate("reviews");
 
   res.json(foundOffer);
 };
