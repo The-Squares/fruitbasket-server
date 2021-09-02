@@ -18,7 +18,7 @@ module.exports.getAllData = async (req, res) => {
 };
 
 module.exports.pageWithoutData = async (req, res) => {
-  let { page } = req.query;
+  let page = req.query.page || 0;
   let offers = await Review.find()
     .limit(perPage)
     .skip(perPage * page);
@@ -26,7 +26,7 @@ module.exports.pageWithoutData = async (req, res) => {
 };
 
 module.exports.pageWithData = async (req, res) => {
-  let { page } = req.query;
+  let page = req.query.page || 0;
   let offers = await Review.find()
     .skip(perPage * page)
     .limit(perPage)
