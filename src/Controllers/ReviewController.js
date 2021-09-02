@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const { Review, User, Offer } = require("../Models/models");
 
+let perPage = 10;
+
 module.exports.get = async (req, res) => {
   let foundReview = await Review.findById(req.params.reviewid);
 
@@ -13,6 +15,24 @@ module.exports.getAllData = async (req, res) => {
     .populate("offer");
 
   res.json(foundReview);
+};
+
+module.exports.pageWithoutData = async (req, res) => {
+  let page = req.query.page || 0;
+  let offers = await Review.find()
+    .limit(perPage)
+    .skip(perPage * page);
+  res.json(offers);
+};
+
+module.exports.pageWithData = async (req, res) => {
+  let page = req.query.page || 0;
+  let offers = await Review.find()
+    .skip(perPage * page)
+    .limit(perPage)
+    .populate("user")
+    .populate("offer");
+  res.json(offers);
 };
 
 module.exports.all = async (req, res) => {

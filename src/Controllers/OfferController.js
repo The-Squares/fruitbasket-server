@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 const cloudinary = require("../Util/cloudinary");
 const { Offer, User } = require("../Models/models");
 
+let perPage = 10;
+
 module.exports.get = async (req, res) => {
   let foundOffer = await Offer.findById(req.params.offerid);
 
@@ -12,6 +14,23 @@ module.exports.getAllData = async (req, res) => {
   let foundOffer = await Offer.findById(req.params.offerid).populate("user").populate("reviews");
 
   res.json(foundOffer);
+};
+
+module.exports.pageWithoutData = async (req, res) => {
+  let page = req.query.page || 0;
+  let offers = await Offer.find()
+    .limit(perPage)
+    .skip(perPage * page);
+  res.json(offers);
+};
+
+module.exports.pageWithData = async (req, res) => {
+  let page = req.query.page || 0;
+  let offers = await Offer.find()
+    .skip(perPage * page)
+    .limit(perPage)
+    .populate("user");
+  res.json(offers);
 };
 
 module.exports.all = async (req, res) => {

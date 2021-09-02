@@ -35,7 +35,8 @@ app.post(
   UserController.image
 );
 app.patch("/api/users/:userid", UserController.update);
-
+app.get("/api/offers/page", OfferController.pageWithoutData);
+app.get("/api/offers/page/all", OfferController.pageWithData);
 app.get("/api/offers", OfferController.all);
 app.get("/api/offers/:offerid", OfferController.get);
 app.get("/api/offers/:offerid/all", OfferController.getAllData);
@@ -49,6 +50,8 @@ app.patch("/api/users/:offerid", OfferController.update);
 
 app.get("/api/reviews", ReviewController.all);
 app.get("/api/reviews/:reviewid", ReviewController.get);
+app.get("/api/offers/page", ReviewController.pageWithoutData);
+app.get("/api/offers/page/all", ReviewController.pageWithoutData);
 app.get("/api/reviews/:reviewid/all", ReviewController.getAllData);
 app.post("/api/reviews", ReviewController.create);
 app.patch("/api/users/:reviewid", ReviewController.update);
