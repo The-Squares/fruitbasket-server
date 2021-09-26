@@ -5,9 +5,11 @@ const { User } = require("../Models/models");
 
 const saltRounds = 10;
 
+// TODO: remove emails from database responses
+
 module.exports.get = async (req, res) => {
   let foundUser = await User.findById(req.params.userid).select(
-    "-password_hash"
+    "-password_hash -email"
   );
 
   res.json(foundUser);
@@ -15,7 +17,7 @@ module.exports.get = async (req, res) => {
 
 module.exports.getOffers = async (req, res) => {
   let foundUser = await User.findById(req.params.userid)
-    .select("-password_hash")
+    .select("-password_hash -email")
     .populate("offers");
 
   res.json(foundUser);
@@ -23,7 +25,7 @@ module.exports.getOffers = async (req, res) => {
 
 module.exports.getReviews = async (req, res) => {
   let foundUser = await User.findById(req.params.userid)
-    .select("-password_hash")
+    .select("-password_hash -email")
     .populate("offers");
 
   res.json(foundUser);
@@ -31,7 +33,7 @@ module.exports.getReviews = async (req, res) => {
 
 module.exports.getAllData = async (req, res) => {
   let foundUser = await User.findById(req.params.userid)
-    .select("-password_hash")
+    .select("-password_hash -email")
     .populate("offers")
     .populate("reviews");
 
@@ -39,7 +41,7 @@ module.exports.getAllData = async (req, res) => {
 };
 
 module.exports.all = async (req, res) => {
-  let users = await User.find().select("-password_hash");
+  let users = await User.find().select("-password_hash -email");
   res.json(users);
 };
 
@@ -55,6 +57,7 @@ module.exports.create = async (req, res) => {
 
   await User.create(userParams);
   delete userParams["password_hash"];
+  delete userParams["email"];
   res.json(userParams);
 };
 
@@ -69,6 +72,7 @@ module.exports.image = async (req, res) => {
       new: true,
     });
     delete doc["password_hash"];
+    delete doc["email"];
     res.json(doc);
   } catch (e) {
     console.log(e);
@@ -81,7 +85,8 @@ module.exports.update = async (req, res) => {
   let doc = await User.findByIdAndUpdate(req.params.userid, req.body, {
     new: true,
   });
-  delete doc[password_hash];
+  delete doc["password_hash"];
+  delete doc["email"];
   res.json(doc);
 };
 
@@ -94,5 +99,7 @@ module.exports.login = async (req, res) => {
   if (!doc) return res.code(401).send("User does not exist");
   if (!(await bcrypt.compare(password, doc.password_hash)))
     return res.code(401).send("Incorrect password");
+  delete doc["password_hash"];
+  delete doc["email"];
   res.send(doc);
 };
