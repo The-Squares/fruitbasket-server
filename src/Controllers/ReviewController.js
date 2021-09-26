@@ -11,7 +11,7 @@ module.exports.get = async (req, res) => {
 
 module.exports.getAllData = async (req, res) => {
   let foundReview = await Review.findById(req.params.reviewid)
-    .populate("user")
+    .populate({ path: "user", select: "-password_hash -email" })
     .populate("offer");
 
   res.json(foundReview);
@@ -30,7 +30,7 @@ module.exports.pageWithData = async (req, res) => {
   let offers = await Review.find()
     .skip(perPage * page)
     .limit(perPage)
-    .populate("user")
+    .populate({ path: "user", select: "-password_hash -email" })
     .populate("offer");
   res.json(offers);
 };

@@ -4,6 +4,8 @@ const { Offer, User } = require("../Models/models");
 
 let perPage = 10;
 
+// TODO: *****REMOVE PASSWORD HASH WHEN POPULATING****
+
 module.exports.get = async (req, res) => {
   let foundOffer = await Offer.findById(req.params.offerid);
 
@@ -11,7 +13,9 @@ module.exports.get = async (req, res) => {
 };
 
 module.exports.getAllData = async (req, res) => {
-  let foundOffer = await Offer.findById(req.params.offerid).populate("user").populate("reviews");
+  let foundOffer = await Offer.findById(req.params.offerid)
+    .populate({ path: "user", select: "-password_hash -email" })
+    .populate("reviews");
 
   res.json(foundOffer);
 };
@@ -29,7 +33,8 @@ module.exports.pageWithData = async (req, res) => {
   let offers = await Offer.find()
     .skip(perPage * page)
     .limit(perPage)
-    .populate("user");
+    .populate({ path: "user", select: "-password_hash -email" })
+    .populate("reviews");
   res.json(offers);
 };
 
