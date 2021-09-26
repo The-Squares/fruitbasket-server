@@ -52,7 +52,7 @@ module.exports.create = async (req, res) => {
     `http://api.positionstack.com/v1/forward?access_key=${process.env.LOCATION_API_KEY}&query=${offerParams.address}`
   );
   let data = await response.json();
-  let location = [data?.data[0]?.latitude, data?.data[0]?.longitude];
+  let location = [data?.data[0]?.longitude, data?.data[0]?.latitude];
   offerParams.location = { type: "Point", coordinates: location };
   await Offer.create(offerParams);
 
