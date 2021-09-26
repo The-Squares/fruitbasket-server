@@ -24,6 +24,15 @@ const OfferSchema = new Schema({
   picture_url: String,
   description: String,
   average_rating: Number,
+  location: {
+    type: {
+      type: String,
+      enum: ["Point"],
+    },
+    coordinates: {
+      type: [Number],
+    },
+  },
   user: { type: Schema.Types.ObjectId, ref: "User" },
   reviews: [{ type: Schema.Types.ObjectId, ref: "Review" }],
 });

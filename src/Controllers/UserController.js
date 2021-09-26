@@ -49,7 +49,7 @@ module.exports.create = async (req, res) => {
   let id = new mongoose.mongo.ObjectId();
 
   let salt = await bcrypt.genSalt(saltRounds);
-  let password_hash = bcrypt.hash(req.body.password, salt);
+  let password_hash = await bcrypt.hash(req.body.password, salt);
   delete req.body.password;
 
   let userParams = { ...req.body, _id: id };
