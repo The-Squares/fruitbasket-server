@@ -13,6 +13,28 @@ module.exports.get = async (req, res) => {
   res.json(foundOffer);
 };
 
+module.exports.geoSpatialGet = async (req, res) => {
+  let { lat, long, distance = 2000 } = req.query;
+  if (!lat || !long) return res.status(500).json({ error: "No coordinates" });
+  if (lat === "undefined" || long === "undefined")
+    return res.status(500).json({ error: "No coordinates" });
+  if (distance === "undefined") distance = 2000;
+
+  let foundOffers = await Offer.find({
+    location: {
+      $near: {
+        $maxDistance: parseFloat(distance),
+        $geometry: {
+          type: "Point",
+          coordinates: [parseFloat(long), parseFloat(lat)],
+        },
+      },
+    },
+  });
+
+  res.json(foundOffers);
+};
+
 module.exports.getAllData = async (req, res) => {
   let foundOffer = await Offer.findById(req.params.offerid)
     .populate({ path: "user", select: "-password_hash -email" })
