@@ -100,7 +100,7 @@ module.exports.image = async (req, res) => {
     res.json(doc);
   } catch (e) {
     console.log(e);
-    res.code(500).send("Failed");
+    res.status(500).send("Failed");
   }
 };
 

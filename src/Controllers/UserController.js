@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const cloudinary = require("../Util/cloudinary");
 const bcrypt = require("bcrypt");
+const { promisify } = require("util");
 const { User } = require("../Models/models");
 
 const saltRounds = 10;
@@ -76,12 +77,12 @@ module.exports.image = async (req, res) => {
     res.json(doc);
   } catch (e) {
     console.log(e);
-    res.code(500).send("Failed");
+    res.status(500).send("Failed");
   }
 };
 
 module.exports.update = async (req, res) => {
-  if (req.body.password_hash) return res.code(401).send("Do not change hash");
+  if (req.body.password_hash) return res.status(401).send("Do not change hash");
   let doc = await User.findByIdAndUpdate(req.params.userid, req.body, {
     new: true,
   });
@@ -94,11 +95,12 @@ module.exports.login = async (req, res) => {
   let { username, email, password } = req.body;
   let loginDetail = username || email;
   if (!loginDetail)
-    return res.code(400).send("Bad Request (no username or email)");
-  let doc = await User.find({ username });
-  if (!doc) return res.code(401).send("User does not exist");
-  if (!(await bcrypt.compare(password, doc.password_hash)))
-    return res.code(401).send("Incorrect password");
+    return res.status(400).send("Bad Request (no username or email)");
+  let loginObj = !username ? { email: email } : { username: username };
+  let doc = await User.findOne(loginObj);
+  if (!doc) return res.status(401).send("User does not exist");
+  if (!(await promisify(bcrypt.compare)(password, doc.password_hash)))
+    return res.status(401).send("Incorrect password");
   delete doc["password_hash"];
   delete doc["email"];
   res.send(doc);
