@@ -6,8 +6,6 @@ const { User } = require("../Models/models");
 
 const saltRounds = 10;
 
-// TODO: remove emails from database responses
-
 module.exports.get = async (req, res) => {
   let foundUser = await User.findById(req.params.userid).select(
     "-password_hash -email"

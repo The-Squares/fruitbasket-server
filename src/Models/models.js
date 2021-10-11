@@ -8,6 +8,7 @@ const UserSchema = new Schema({
   email: String,
   password_hash: String,
   profile_picture_url: String,
+  volunteer: Boolean,
   offers: [{ type: Schema.Types.ObjectId, ref: "Offer" }],
   reviews: [{ type: Schema.Types.ObjectId, ref: "Review" }],
 });
