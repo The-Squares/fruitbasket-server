@@ -3,6 +3,8 @@ const cloudinary = require("../Util/cloudinary");
 const bcrypt = require("bcrypt");
 const { promisify } = require("util");
 const { User } = require("../Models/models");
+const bufferToStream = require("../Util/bufferToStream");
+const sharp = require("sharp");
 
 const saltRounds = 10;
 
@@ -62,17 +64,25 @@ module.exports.create = async (req, res) => {
 
 module.exports.image = async (req, res) => {
   try {
-    const image = await cloudinary.uploader.upload(req.file.path, {
-      public_id: req.params.userid,
-    });
+    let dimensions = JSON.parse(req.body.dimensions);
+    const data = await sharp(req.file.path).extract(dimensions).toBuffer();
+    const stream = cloudinary.uploader.upload_stream(
+      {
+        public_id: req.params.userid,
+      },
+      async (error, result) => {
+        if (error) throw error;
 
-    const data = { profile_picture_url: image.secure_url };
-    let doc = await User.findByIdAndUpdate(req.params.userid, data, {
-      new: true,
-    });
-    delete doc["password_hash"];
-    delete doc["email"];
-    res.json(doc);
+        const data = { profile_picture_url: result.secure_url };
+        let doc = await User.findByIdAndUpdate(req.params.userid, data, {
+          new: true,
+        });
+        delete doc["password_hash"];
+        delete doc["email"];
+        res.json(doc);
+      }
+    );
+    bufferToStream(data).pipe(stream);
   } catch (e) {
     console.log(e);
     res.status(500).send("Failed");

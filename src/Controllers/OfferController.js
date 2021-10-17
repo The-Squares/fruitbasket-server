@@ -34,11 +34,15 @@ module.exports.geoSpatialGet = async (req, res) => {
 };
 
 module.exports.getAllData = async (req, res) => {
-  let foundOffer = await Offer.findById(req.params.offerid)
-    .populate({ path: "user", select: "-password_hash -email" })
-    .populate("reviews");
+  try {
+    let foundOffer = await Offer.findById(req.params.offerid)
+      .populate({ path: "user", select: "-password_hash" })
+      .populate("reviews");
 
-  res.json(foundOffer);
+    res.json(foundOffer);
+  } catch (e) {
+    res.status(500).send("Failed");
+  }
 };
 
 module.exports.pageWithoutData = async (req, res) => {
