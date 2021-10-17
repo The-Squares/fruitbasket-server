@@ -46,7 +46,7 @@ app.get("/api/offers/:offerid", OfferController.get);
 app.get("/api/offers/:offerid/all", OfferController.getAllData);
 app.post("/api/offers", OfferController.create);
 app.post(
-  "/api/users/:offerid/image",
+  "/api/offers/:offerid/image",
   multer.single("image"),
   OfferController.image
 );

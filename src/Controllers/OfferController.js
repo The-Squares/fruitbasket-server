@@ -91,10 +91,12 @@ module.exports.image = async (req, res) => {
       public_id: req.params.offerid,
     });
 
+    console.log(req.params.offerid);
     const data = { picture_url: image.secure_url };
-    let doc = await User.findByIdAndUpdate(req.params.offerid, data, {
+    let doc = await Offer.findByIdAndUpdate(req.params.offerid, data, {
       new: true,
     });
+    console.log(doc);
     res.json(doc);
   } catch (e) {
     console.log(e);
