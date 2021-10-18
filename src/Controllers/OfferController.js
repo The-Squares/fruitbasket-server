@@ -33,6 +33,22 @@ module.exports.geoSpatialGet = async (req, res) => {
   res.json(foundOffers);
 };
 
+module.exports.search = async (req, res) => {
+  try {
+    let { term } = req.query;
+    let foundOffers = await Offer.find({
+      $text: {
+        $search: term,
+      },
+    });
+
+    res.json(foundOffers);
+  } catch (e) {
+    console.log(e);
+    res.status(500).send("Failed");
+  }
+};
+
 module.exports.getAllData = async (req, res) => {
   try {
     let foundOffer = await Offer.findById(req.params.offerid)

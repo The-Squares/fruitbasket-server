@@ -42,6 +42,7 @@ app.get("/api/offers/page", OfferController.pageWithoutData);
 app.get("/api/offers/page/all", OfferController.pageWithData);
 app.get("/api/offers", OfferController.all);
 app.get("/api/offers/location", OfferController.geoSpatialGet);
+app.get("/api/offers/search", OfferController.search);
 app.get("/api/offers/:offerid", OfferController.get);
 app.get("/api/offers/:offerid/all", OfferController.getAllData);
 app.post("/api/offers", OfferController.create);
