@@ -61,6 +61,9 @@ app.get("/api/reviews/:reviewid/all", ReviewController.getAllData);
 app.post("/api/reviews", ReviewController.create);
 app.patch("/api/users/:reviewid", ReviewController.update);
 
+app.get("/api/foodbanks", OfferController.foodbanks);
+app.post("/api/foodbanks", OfferController.addFoodBank);
+
 app.listen(port, () => {
   console.log(`Started on http://localhost:${port}`);
 });

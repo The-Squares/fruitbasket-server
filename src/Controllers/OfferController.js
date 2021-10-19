@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const cloudinary = require("../Util/cloudinary");
 const fetch = require("node-fetch");
-const { Offer, User } = require("../Models/models");
+const { Offer, User, Foodbank } = require("../Models/models");
 
 let perPage = 10;
 
@@ -129,4 +129,20 @@ module.exports.update = async (req, res) => {
     new: true,
   });
   res.json(doc);
+};
+
+module.exports.addFoodBank = async (req, res) => {
+  let id = new mongoose.mongo.ObjectId();
+
+  let foodbankParams = { link: req.body.link, _id: id };
+  let location = [req.body.longitude, req.body.latitude];
+  foodbankParams.location = { type: "Point", coordinates: location };
+  await Foodbank.create(foodbankParams);
+
+  res.json(foodbankParams);
+};
+
+module.exports.foodbanks = async (req, res) => {
+  let foodbanks = await Foodbank.find();
+  res.json(foodbanks);
 };

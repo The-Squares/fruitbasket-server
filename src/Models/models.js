@@ -47,6 +47,20 @@ const ReviewSchema = new Schema({
   offer: { type: Schema.Types.ObjectId, ref: "Offer" },
 });
 
+const FoodbankSchema = new Schema({
+  location: {
+    type: {
+      type: String,
+      enum: ["Point"],
+    },
+    coordinates: {
+      type: [Number],
+    },
+  },
+  link: String,
+});
+
 module.exports.User = mongoose.model("User", UserSchema);
 module.exports.Offer = mongoose.model("Offer", OfferSchema);
 module.exports.Review = mongoose.model("Review", ReviewSchema);
+module.exports.Foodbank = mongoose.model("Foodbank", FoodbankSchema);
